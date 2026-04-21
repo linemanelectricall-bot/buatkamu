@@ -3,133 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday 🎂</title>
+<title>For You 💖</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #ff758c, #ff7eb3);
-  text-align: center;
-  color: white;
-  overflow: hidden;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{height:100vh;overflow:hidden;background:radial-gradient(circle at top,#1a1f4a,#0f1330);color:#fff}
 
-h1 {
-  margin-top: 50px;
-  font-size: 2.5em;
-}
+.bubble{position:absolute;bottom:-100px;border-radius:50%;background:rgba(255,255,255,.08);animation:rise linear infinite}
+@keyframes rise{to{transform:translateY(-120vh);opacity:0}}
 
-.cake {
-  margin: 50px auto;
-  position: relative;
-  width: 200px;
-  height: 200px;
-}
+.card{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;padding:25px;border-radius:25px;text-align:center;background:rgba(255,255,255,.06);backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,.5)}
 
-.layer {
-  background: #ffcc80;
-  height: 60px;
-  border-radius: 10px;
-  margin: 5px 0;
-}
+.avatar{width:110px;height:110px;margin:auto;border-radius:20px;overflow:hidden;box-shadow:0 0 25px rgba(255,105,135,.6)}
+.avatar img{width:100%;height:100%;object-fit:cover}
 
-.candle {
-  width: 10px;
-  height: 40px;
-  background: #fff;
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-}
+.avatar.active{animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 
-.flame {
-  width: 15px;
-  height: 15px;
-  background: orange;
-  border-radius: 50%;
-  position: absolute;
-  top: -15px;
-  left: -2px;
-  animation: flicker 0.2s infinite alternate;
-}
+button{width:100%;margin-top:15px;padding:12px;border:none;border-radius:30px;background:linear-gradient(45deg,#ff6b81,#ff9aa2);color:#fff;font-weight:600}
+.hidden{display:none}
 
-@keyframes flicker {
-  from { transform: scale(1); }
-  to { transform: scale(1.2); }
-}
+.heart{position:absolute;font-size:20px;animation:fly 3s linear infinite}
+@keyframes fly{from{transform:translateY(0);opacity:1}to{transform:translateY(-200px);opacity:0}}
 
-button {
-  padding: 12px 25px;
-  border: none;
-  border-radius: 30px;
-  background: #ff4081;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.hidden {
-  display: none;
-}
-
-@keyframes fall {
-  to { transform: translateY(100vh); }
-}
-
-.confetti {
-  position: fixed;
-  width: 10px;
-  height: 10px;
-  top: -10px;
-}
+.modal{position:fixed;bottom:0;left:0;width:100%;background:#1b1f3a;padding:20px;border-radius:20px 20px 0 0;display:none}
+.modal.active{display:block}
 </style>
 </head>
-
 <body>
 
-<h1>🎉 Selamat Ulang Tahun, Naura! 🎉</h1>
-<p>Semoga panjang umur, sehat selalu, dan makin sukses 🚀</p>
+<script>
+for(let i=0;i<25;i++){
+ let b=document.createElement('div');b.className='bubble';
+ let s=Math.random()*30+10;
+ b.style.width=s+'px';b.style.height=s+'px';
+ b.style.left=Math.random()*100+'%';
+ b.style.animationDuration=(5+Math.random()*5)+'s';
+ document.body.appendChild(b);
+}
+</script>
 
-<div class="cake">
-  <div class="candle">
-    <div class="flame" id="flame"></div>
-  </div>
-  <div class="layer"></div>
-  <div class="layer"></div>
-  <div class="layer"></div>
+<!-- STEP 1 -->
+<div class="card" id="step1">
+ <div class="avatar active">
+  <img src="char1.gif">
+ </div>
+ <h1>Alooo Kamuuu! 🥳</h1>
+ <p>Ada sesuatu spesial buat kamu 💖</p>
+ <button onclick="startApp()">Mulai ✨</button>
 </div>
 
-<button onclick="blowCandle()">Tiup Lilin 💨</button>
+<!-- STEP 2 -->
+<div class="card hidden" id="step2">
+ <div class="avatar active">
+  <img src="char2.gif">
+ </div>
+ <h3>Tahun Lahir Kamu? 🤔</h3>
+ <input type="range" min="1980" max="2025" value="2000" id="year">
+ <p id="yearText">2000</p>
+ <button onclick="showResult()">Lanjutkan →</button>
+</div>
 
-<p id="wish" class="hidden">🎂 Harapanmu akan terkabul! Jangan lupa traktir 😆</p>
+<!-- RESULT -->
+<div class="card hidden" id="result">
+ <div class="avatar active">
+  <img src="char3.gif">
+ </div>
+ <h2 id="title"></h2>
+ <p id="msg"></p>
+ <button onclick="openShare()">Kirim ke Dia 💌</button>
+</div>
 
-<audio id="music" autoplay loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
-</audio>
+<div class="modal" id="shareModal">
+ <h3>Kirim ke Dia 💌</h3>
+ <button onclick="shareWA()">WhatsApp</button>
+</div>
 
 <script>
-function blowCandle() {
-  document.getElementById("flame").style.display = "none";
-  document.getElementById("wish").style.display = "block";
-  createConfetti();
+let yearInput=document.getElementById('year');
+let yearText=document.getElementById('yearText');
+yearInput.oninput=()=>yearText.innerText=yearInput.value;
+
+function startApp(){
+ document.getElementById('step1').classList.add('hidden');
+ document.getElementById('step2').classList.remove('hidden');
 }
 
-function createConfetti() {
-  for (let i = 0; i < 80; i++) {
-    let confetti = document.createElement("div");
-    confetti.classList.add("confetti");
+function showResult(){
+ let age=new Date().getFullYear()-yearInput.value;
+ document.getElementById('step2').classList.add('hidden');
+ document.getElementById('result').classList.remove('hidden');
 
-    confetti.style.left = Math.random() * window.innerWidth + "px";
-    confetti.style.backgroundColor =
-      "hsl(" + Math.random() * 360 + ", 100%, 50%)";
-    confetti.style.animation = "fall " + (Math.random() * 3 + 2) + "s linear";
+ document.getElementById('title').innerHTML=`✨ ${age} Tahun ✨`;
 
-    document.body.appendChild(confetti);
+ let text=`Selamat Ulang Tahun yaa! 🥳✨\n\nSekarang kamu ${age} tahun 😆\nSemoga selalu bahagia 💖`;
+ typeWriter(text);
+ spawnHearts();
+}
 
-    setTimeout(() => confetti.remove(), 5000);
+function typeWriter(t){
+ let el=document.getElementById('msg');el.innerHTML='';
+ let i=0;
+ function typing(){
+  if(i<t.length){
+   if(t[i]=='\n') el.innerHTML+='<br>';
+   else el.innerHTML+=t[i];
+   i++;setTimeout(typing,25);
   }
+ }
+ typing();
+}
+
+function spawnHearts(){
+ setInterval(()=>{
+  let h=document.createElement('div');
+  h.className='heart';h.innerHTML='💖';
+  h.style.left=Math.random()*100+'%';h.style.top='80%';
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),3000);
+ },300);
+}
+
+function openShare(){
+ document.getElementById('shareModal').classList.add('active');
+}
+
+function shareWA(){
+ let text=encodeURIComponent('Aku punya sesuatu buat kamu 💖 '+location.href);
+ window.open('https://wa.me/?text='+text,'_blank');
 }
 </script>
 
